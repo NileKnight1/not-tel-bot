@@ -1,0 +1,21 @@
+name: price-monitor
+
+on:
+  schedule:
+    - cron: "0 7,17 * * *"   # twice a day, UTC time
+  workflow_dispatch:          # lets you run it manually from the Actions tab
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4
+      - run: python monitor.py
+        env:
+          PARSE_API_KEY: ${{ secrets.PARSE_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
